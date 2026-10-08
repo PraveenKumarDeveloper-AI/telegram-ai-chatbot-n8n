@@ -19,6 +19,8 @@ Model    Memory
 Telegram Send Message
         ↓
    Telegram User
+
+
 ✨ Features
 - 💬 Telegram chatbot
 - 🤖 OpenAI-powered AI Agent
