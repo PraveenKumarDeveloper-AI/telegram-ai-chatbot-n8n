@@ -1,0 +1,472 @@
+{
+  "updatedAt": "2026-10-08T15:46:09.279Z",
+  "createdAt": "2026-10-08T15:07:10.254Z",
+  "id": "I0qLC7gxSeyqI1qm",
+  "name": "Telegram_AI_Chatbot",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d456a940-f20f-4933-a75b-b33420a50228",
+      "name": "Telegram Trigger",
+      "webhookId": "a3b5a435-4196-4a79-97f6-975416c78485",
+      "credentials": {
+        "telegramApi": {
+          "id": "KUOUgBxVHeiAAWpd",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Telegram Trigger').item.json.message.text }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "893fc9a1-f4e0-4328-b684-3100f0e03657",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        96,
+        208
+      ],
+      "id": "8da9b738-0800-4287-90c1-ae6e7170e9bc",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "contextWindowLength": 100
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        240,
+        208
+      ],
+      "id": "fdc45563-8721-42b3-bab1-08ab9da41bf8",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "sendTo": "lv5251071@gmail.com",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        384,
+        208
+      ],
+      "id": "74555e02-8ebe-4770-8164-f822997b2086",
+      "name": "Send a message in Gmail",
+      "webhookId": "c92bf968-7611-42dd-9ea0-0a68046149f0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "3mLPEkJXp0Z1J9Gk",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "6957317392",
+        "text": "={{ $('AI Agent').item.json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        592,
+        0
+      ],
+      "id": "c596c0dd-00a4-4016-8fa6-76d7a236c6f8",
+      "name": "Send a text message",
+      "webhookId": "129cbeda-bf6e-4e2e-bf4a-61d9f2f18dab",
+      "credentials": {
+        "telegramApi": {
+          "id": "KUOUgBxVHeiAAWpd",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": true
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "nodeGroups": [],
+  "pinData": {},
+  "versionId": "2b1017c0-85bb-4cf0-b161-c835ce52c155",
+  "activeVersionId": "0fb7ac6b-07a3-481c-8125-f878a0d4d177",
+  "versionCounter": 42,
+  "triggerCount": 1,
+  "sourceWorkflowId": null,
+  "tags": [],
+  "parentFolder": null,
+  "activeVersion": {
+    "updatedAt": "2026-10-08T15:30:44.000Z",
+    "createdAt": "2026-10-08T15:29:55.470Z",
+    "versionId": "0fb7ac6b-07a3-481c-8125-f878a0d4d177",
+    "workflowId": "I0qLC7gxSeyqI1qm",
+    "nodes": [
+      {
+        "parameters": {
+          "updates": [
+            "message"
+          ],
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.telegramTrigger",
+        "typeVersion": 1.5,
+        "position": [
+          0,
+          0
+        ],
+        "id": "d456a940-f20f-4933-a75b-b33420a50228",
+        "name": "Telegram Trigger",
+        "webhookId": "a3b5a435-4196-4a79-97f6-975416c78485",
+        "credentials": {
+          "telegramApi": {
+            "id": "KUOUgBxVHeiAAWpd",
+            "name": "Telegram account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "={{ $('Telegram Trigger').item.json.message.text }}",
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 3.1,
+        "position": [
+          224,
+          0
+        ],
+        "id": "893fc9a1-f4e0-4328-b684-3100f0e03657",
+        "name": "AI Agent"
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "mode": "list",
+            "value": "gpt-5-mini"
+          },
+          "builtInTools": {},
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.3,
+        "position": [
+          96,
+          208
+        ],
+        "id": "8da9b738-0800-4287-90c1-ae6e7170e9bc",
+        "name": "OpenAI Chat Model",
+        "credentials": {
+          "openAiApi": {
+            "id": null,
+            "name": "",
+            "__aiGatewayManaged": true
+          }
+        }
+      },
+      {
+        "parameters": {
+          "sessionIdType": "customKey",
+          "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+          "contextWindowLength": 100
+        },
+        "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+        "typeVersion": 1.4,
+        "position": [
+          240,
+          208
+        ],
+        "id": "fdc45563-8721-42b3-bab1-08ab9da41bf8",
+        "name": "Simple Memory"
+      },
+      {
+        "parameters": {
+          "sendTo": "lv5251071@gmail.com",
+          "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+          "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.gmailTool",
+        "typeVersion": 2.2,
+        "position": [
+          384,
+          208
+        ],
+        "id": "74555e02-8ebe-4770-8164-f822997b2086",
+        "name": "Send a message in Gmail",
+        "webhookId": "c92bf968-7611-42dd-9ea0-0a68046149f0",
+        "credentials": {
+          "gmailOAuth2": {
+            "id": "3mLPEkJXp0Z1J9Gk",
+            "name": "Gmail account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "chatId": "6957317392",
+          "text": "={{ $('AI Agent').item.json.output }}",
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          592,
+          0
+        ],
+        "id": "c596c0dd-00a4-4016-8fa6-76d7a236c6f8",
+        "name": "Send a text message",
+        "webhookId": "129cbeda-bf6e-4e2e-bf4a-61d9f2f18dab",
+        "credentials": {
+          "telegramApi": {
+            "id": "KUOUgBxVHeiAAWpd",
+            "name": "Telegram account"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Telegram Trigger": {
+        "main": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Simple Memory": {
+        "ai_memory": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_memory",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Send a message in Gmail": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "AI Agent": {
+        "main": [
+          [
+            {
+              "node": "Send a text message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "nodeGroups": [],
+    "authors": "praveen  ",
+    "name": "Version 0fb7ac6b",
+    "description": "",
+    "autosaved": true,
+    "workflowPublishHistory": [
+      {
+        "createdAt": "2026-10-08T15:30:44.013Z",
+        "id": 9,
+        "workflowId": "I0qLC7gxSeyqI1qm",
+        "versionId": "0fb7ac6b-07a3-481c-8125-f878a0d4d177",
+        "event": "activated",
+        "userId": "eae6d4a3-7f9e-434b-9481-e768614ed80d"
+      }
+    ]
+  },
+  "homeProject": {
+    "id": "hSUJrJURbvYagn1X",
+    "type": "personal",
+    "name": "praveen   <gragorinixon@gmail.com>",
+    "icon": null
+  },
+  "sharedWithProjects": [],
+  "usedCredentials": [
+    {
+      "id": "3mLPEkJXp0Z1J9Gk",
+      "name": "Gmail account",
+      "type": "gmailOAuth2",
+      "currentUserHasAccess": true,
+      "homeProject": {
+        "id": "hSUJrJURbvYagn1X",
+        "type": "personal",
+        "name": "praveen   <gragorinixon@gmail.com>",
+        "icon": null
+      },
+      "sharedWithProjects": []
+    },
+    {
+      "id": "KUOUgBxVHeiAAWpd",
+      "name": "Telegram account",
+      "type": "telegramApi",
+      "currentUserHasAccess": true,
+      "homeProject": {
+        "id": "hSUJrJURbvYagn1X",
+        "type": "personal",
+        "name": "praveen   <gragorinixon@gmail.com>",
+        "icon": null
+      },
+      "sharedWithProjects": []
+    }
+  ],
+  "scopes": [
+    "execution:delete",
+    "execution:list",
+    "execution:read",
+    "execution:reveal",
+    "workflow:create",
+    "workflow:delete",
+    "workflow:disableRedaction",
+    "workflow:enableRedaction",
+    "workflow:execute",
+    "workflow:execute-chat",
+    "workflow:export",
+    "workflow:import",
+    "workflow:list",
+    "workflow:move",
+    "workflow:publish",
+    "workflow:read",
+    "workflow:share",
+    "workflow:unpublish",
+    "workflow:unshare",
+    "workflow:update"
+  ],
+  "checksum": "1988ceafa84e88c5ac310199cd5715d3ad69068dc279c4c2f6a30c6be6bb56d8"
+}
