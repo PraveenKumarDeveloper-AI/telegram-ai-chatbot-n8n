@@ -1,26 +1,24 @@
-🤖 Telegram AI Chatbot with n8n
-A Telegram AI chatbot workflow built with n8n, Telegram,
-OpenAI, Simple Memory, and Gmail.
-🚀 Workflow
-Telegram User
-     ↓
-Telegram Trigger
-     ↓
-AI Agent
- ┌───┴───────────────┐
- ↓                   ↓
-OpenAI Chat Model   Simple Memory
- └────────┬──────────┘
-          ↓
-Telegram Send Message
-          ↓
-     Telegram User
+# 🤖 Telegram AI Chatbot with n8n
 
+An AI-powered Telegram chatbot built with **n8n, Telegram, OpenAI, Simple Memory, and Gmail**.
+
+## 🚀 Workflow
+
+```text
+Telegram User
+      ↓
+Telegram Trigger
+      ↓
 AI Agent
-   ↓
-Gmail Tool
-   ↓
-Email
+   ↙      ↘
+OpenAI   Simple
+Model    Memory
+   ↘      ↙
+    AI Response
+        ↓
+Telegram Send Message
+        ↓
+   Telegram User
 ✨ Features
 - 💬 Telegram chatbot
 - 🤖 OpenAI-powered AI Agent
